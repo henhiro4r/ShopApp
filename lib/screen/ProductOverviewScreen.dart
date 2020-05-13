@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopapp/provider/ProductProvider.dart';
+import 'package:shopapp/provider/CartProvider.dart';
+import 'package:shopapp/screen/CartScreen.dart';
+import 'package:shopapp/widget/Badge.dart';
 import 'package:shopapp/widget/ProductGrid.dart';
 
 enum FilterOption {
@@ -8,10 +10,16 @@ enum FilterOption {
   All,
 }
 
-class ProductOverviewScreen extends StatelessWidget {
+class ProductOverviewScreen extends StatefulWidget {
+  @override
+  _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
+}
+
+class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
+  var _showOnlyFavorite = false;
+
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -20,13 +28,7 @@ class ProductOverviewScreen extends StatelessWidget {
         actions: <Widget>[
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
-            onSelected: (FilterOption val) {
-              if  (val == FilterOption.Favorite) {
-                products.showFavorite();
-              } else {
-                products.showAll();
-              }
-            },
+            onSelected: (FilterOption val) => toggleFav(val),
             itemBuilder: (_) => [
               PopupMenuItem(
                 child: Text('Only Favorites'),
@@ -38,9 +40,31 @@ class ProductOverviewScreen extends StatelessWidget {
               ),
             ],
           ),
+          Consumer<CartProvider>(
+            builder: (_, cart, ch) => Badge(
+              child: ch,
+              value: cart.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+          ),
         ],
       ),
-      body: ProductGrid(),
+      body: ProductGrid(_showOnlyFavorite),
     );
+  }
+
+  void toggleFav(val) {
+    setState(() {
+      if (val == FilterOption.Favorite) {
+        _showOnlyFavorite = true;
+      } else {
+        _showOnlyFavorite = false;
+      }
+    });
   }
 }

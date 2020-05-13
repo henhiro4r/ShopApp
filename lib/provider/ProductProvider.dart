@@ -37,23 +37,12 @@ class ProductProvider with ChangeNotifier {
     ),
   ];
 
-  var _showFavoriteOnly = false;
-
   List<Product> get products {
-    if (_showFavoriteOnly) {
-      return _products.where((element) => element.isFavorite).toList();
-    }
     return [..._products];
   }
 
-  void showFavorite() {
-    _showFavoriteOnly = true;
-    notifyListeners();
-  }
-
-  void showAll() {
-    _showFavoriteOnly = false;
-    notifyListeners();
+  List<Product> get favProducts {
+    return _products.where((element) => element.isFavorite).toList();
   }
 
   void addProduct() {
