@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopapp/model/Product.dart';
+import 'package:shopapp/screen/ProductDetailScreen.dart';
 
 class ProductAdapter extends StatelessWidget {
   final Product product;
@@ -12,9 +12,17 @@ class ProductAdapter extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
-        child: Image.network(
-          product.imageUrl,
-          fit: BoxFit.cover,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ProductDetailScreen.routeName,
+              arguments: product,
+            );
+          },
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
