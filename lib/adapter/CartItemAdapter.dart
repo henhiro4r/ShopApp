@@ -25,8 +25,26 @@ class CartItemAdapter extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (_) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to remove this item?',),
+            actions: <Widget>[
+              FlatButton(onPressed: () {
+                Navigator.of(ctx).pop(false);
+              }, child: Text('No')),
+              FlatButton(onPressed: () {
+                Navigator.of(ctx).pop(true);
+              }, child: Text('Yes')),
+            ],
+          ),
+        );
+      },
       onDismissed: (_) {
-        Provider.of<CartProvider>(context, listen: false).removeItem(cartKey);
+        Provider.of<CartProvider>(context, listen: false)
+            .removeProduct(cartKey);
       },
       child: Card(
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -42,7 +60,8 @@ class CartItemAdapter extends StatelessWidget {
               ),
             ),
             title: Text(cart.title),
-            subtitle: Text('Total: \$${(cart.price * cart.quantity).toStringAsFixed(2)}'),
+            subtitle: Text(
+                'Total: \$${(cart.price * cart.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cart.quantity}x'),
           ),
         ),

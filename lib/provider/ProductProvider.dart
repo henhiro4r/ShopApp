@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shopapp/model/Product.dart';
 
@@ -45,7 +47,24 @@ class ProductProvider with ChangeNotifier {
     return _products.where((element) => element.isFavorite).toList();
   }
 
-  void addProduct() {
+  void addProduct(Product product) {
+    final newProduct = Product(title: product.title, imageUrl: product.imageUrl, price: product.price, description: product.description, id: DateTime.now().toString());
+    _products.add(newProduct);
+    notifyListeners();
+  }
+
+  void editProduct(Product product){
+    final pIndex = _products.indexWhere((element) => element.id == product.id);
+    if (pIndex >= 0) {
+      _products[pIndex] = product;
+      notifyListeners();
+    } else {
+      print('____');
+    }
+  }
+
+  void deleteProduct(Product product){
+    _products.removeWhere((element) => element.id == product.id);
     notifyListeners();
   }
 }

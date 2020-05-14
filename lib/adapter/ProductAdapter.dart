@@ -47,6 +47,16 @@ class ProductAdapter extends StatelessWidget {
             color: Theme.of(context).accentColor,
             onPressed: () {
               cart.addItem(product);
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('1 ${product.title} added to cart'),
+                  duration: Duration(seconds: 3),
+                  action: SnackBarAction(label: 'Undo', onPressed: () {
+                    cart.removeSingleItem(product.id);
+                  }),
+                ),
+              );
             },
           ),
         ),
